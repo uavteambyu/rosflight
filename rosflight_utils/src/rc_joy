@@ -54,7 +54,7 @@ else:
 
 # Main event loop
 next_update_time = time.time()
-if
+
 while not rospy.is_shutdown():
     pygame.event.pump()
 
