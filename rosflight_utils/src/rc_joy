@@ -83,7 +83,7 @@ while not rospy.is_shutdown():
             msg.values[7] = joy.get_button(2) * 1000 + 1000
 
         rc_pub.publish(msg)
-        rospy.loginfo("Buttons %d %d %d",msg.values[5],msg.values[6],msg.values[7])
+    
 
     # realflight mapping
     else:
