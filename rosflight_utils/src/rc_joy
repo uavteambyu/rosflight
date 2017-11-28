@@ -18,7 +18,7 @@ joy = pygame.joystick.Joystick(0)
 joy.init()
 
 print "joystick:", joy.get_name()
-
+joystick = "Taranis"
 mapping = dict()
 
 if 'Taranis' in joy.get_name():
@@ -32,6 +32,7 @@ if 'Taranis' in joy.get_name():
     mapping['zsign'] = 1
     mapping['Fsign'] = 1
 elif 'Xbox' in joy.get_name() or 'X-Box' in joy.get_name():
+    joystick = "Xbox"
     print "found xbox"
     mapping['x'] = 3
     mapping['y'] = 4
@@ -42,6 +43,7 @@ elif 'Xbox' in joy.get_name() or 'X-Box' in joy.get_name():
     mapping['zsign'] = 1
     mapping['Fsign'] = -1
 else:
+    joystick = "RealFlight"
     print "using realflght mapping"
     mapping['x'] = 1
     mapping['y'] = 2
@@ -66,27 +68,37 @@ while not rospy.is_shutdown():
         msg = RCRaw()
         msg.header.stamp = rospy.Time.now()
 
-        msg.values[0] = joy.get_axis(0) * 500 + 1500
-        msg.values[1] = joy.get_axis(1) * 500 + 1500
-        msg.values[2] = joy.get_axis(2) * 500 + 1500
-        msg.values[3] = joy.get_axis(3) * 500 + 1500
+        msg.values[0] = joy.get_axis(0)*mapping['xsign'] * 500 + 1500
+        msg.values[1] = joy.get_axis(1)*mapping['ysign'] * 500 + 1500
+        msg.values[2] = joy.get_axis(2)*mapping['Fsign'] * 500 + 1500
+        msg.values[3] = joy.get_axis(3)*mapping['zsign'] * 500 + 1500
         msg.values[4] = joy.get_axis(4) * 500 + 1500
-        msg.values[5] = joy.get_axis(5) * 500 + 1500
-        msg.values[6] = joy.get_axis(6) * 500 + 1500
-        msg.values[7] = joy.get_button(0) * 1000 + 1000
+        if joystick is "Taranis":
+            msg.values[5] = joy.get_axis(5) * 500 + 1500
+            msg.values[6] = joy.get_axis(6) * 500 + 1500
+            msg.values[7] = joy.get_axis(7) * 500 + 1500
+        else:
+            msg.values[5] = joy.get_button(0) * 1000 + 1000
+            msg.values[6] = joy.get_button(1) * 1000 + 1000
+            msg.values[7] = joy.get_button(2) * 1000 + 1000
 
         rc_pub.publish(msg)
         rospy.loginfo("Buttons %d %d %d",msg.values[5],msg.values[6],msg.values[7])
 
     # realflight mapping
     else:
-        msg.values[0] = joy.get_axis(0) * 500 + 1500
-        msg.values[1] = joy.get_axis(1) * 500 + 1500
-        msg.values[2] = joy.get_axis(2) * -500 + 1500
-        msg.values[3] = joy.get_axis(4) * 500 + 1500
-        msg.values[4] = joy.get_axis(3) * 500 + 1500
+        msg.values[0] = joy.get_axis(0)*mapping['xsign'] * 500 + 1500
+        msg.values[1] = joy.get_axis(1)*mapping['ysign'] * 500 + 1500
+        msg.values[2] = joy.get_axis(2)*mapping['Fsign'] * 500 + 1500
+        msg.values[3] = joy.get_axis(3)*mapping['zsign'] * 500 + 1500
+        msg.values[4] = joy.get_axis(4) * 500 + 1500
+    if joystick is "Taranis":
         msg.values[5] = joy.get_axis(5) * 500 + 1500
         msg.values[6] = joy.get_axis(6) * 500 + 1500
+        msg.values[7] = joy.get_axis(7) * 500 + 1500
+    else:
+        msg.values[5] = joy.get_button(0) * 1000 + 1000
+        msg.values[6] = joy.get_button(1) * 1000 + 1000
         msg.values[7] = joy.get_button(2) * 1000 + 1000
 
         rc_pub.publish(msg)
