@@ -94,8 +94,8 @@ Joy::Joy()
   pnh.param<int>("button_takeoff", buttons_.fly.index, 0);
   pnh.param<int>("button_mode", buttons_.mode.index, 1);
   pnh.param<int>("button_reset", buttons_.reset.index, 9);
-  pnh.param<int>("button_pause", buttons_.pause.index, 8);
-  pnh.param<int>("button_override", buttons_.override.index, 8);
+  pnh.param<int>("button_pause", buttons_.pause.index, 8);		// was 8
+  pnh.param<int>("button_override", buttons_.override.index, 8);// was 8
 
   command_pub_ = nh_.advertise<rosflight_msgs::Command>(command_topic_, 10);
 

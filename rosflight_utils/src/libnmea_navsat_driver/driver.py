@@ -64,7 +64,7 @@ class RosNMEADriver(object):
 
         parsed_sentence = libnmea_navsat_driver.parser.parse_nmea_sentence(nmea_string)
         if not parsed_sentence:
-            rospy.logdebug("Failed to parse NMEA sentence. Sentece was: %s" % nmea_string)
+            rospy.logdebug("Failed to parse NMEA sentence. Sentence was: %s" % nmea_string)
             return False
 
         if timestamp:
