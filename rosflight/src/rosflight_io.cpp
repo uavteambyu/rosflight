@@ -693,6 +693,7 @@ void rosflightIO::commandCallback(rosflight_msgs::Command::ConstPtr msg)
   float y = msg->y;
   float z = msg->z;
   float F = msg->F;
+  float bomb_drop = msg->bomb_drop;
 
   switch (mode)
   {
@@ -701,6 +702,7 @@ void rosflightIO::commandCallback(rosflight_msgs::Command::ConstPtr msg)
       y = saturate(y, -1.0f, 1.0f);
       z = saturate(z, -1.0f, 1.0f);
       F = saturate(F, 0.0f, 1.0f);
+      bomb_drop = saturate(bomb_drop, 0.0f, 1.0f);
       break;
     case MODE_ROLLRATE_PITCHRATE_YAWRATE_THROTTLE:
     case MODE_ROLL_PITCH_YAWRATE_THROTTLE:
@@ -711,7 +713,7 @@ void rosflightIO::commandCallback(rosflight_msgs::Command::ConstPtr msg)
   }
 
   mavlink_message_t mavlink_msg;
-  mavlink_msg_offboard_control_pack(1, 50, &mavlink_msg, mode, ignore, x, y, z, F);
+  mavlink_msg_offboard_control_pack(1, 50, &mavlink_msg, mode, ignore, x, y, z, F,bomb_drop);
   mavrosflight_->comm.send_message(mavlink_msg);
 }
 
